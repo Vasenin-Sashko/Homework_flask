@@ -8,14 +8,14 @@ from sqlalchemy.orm import sessionmaker
 
 app = Flask('app')
 Base = declarative_base()
-engine = create_engine('postgresql://app:12345@lacalhost:5431/advertisement')
+engine = create_engine('postgresql://app:12345@localhost:5431/advertisement')
 Session = sessionmaker(bind=engine)
 
 
 class ADV(Base):
     __tablename__ = 'Advs'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     heading = Column(String(80), nullable=False)
     description = Column(String(500), nullable=False)
     user_name = Column(String(50), nullable=False, unique=True)
@@ -43,8 +43,7 @@ class ADV_View(MethodView):
     def post(self):
         adv_data = dict(request.json)
         with Session() as session:
-            new_adv = ADV(id=adv_data['id'],
-                          heading=adv_data['heading'],
+            new_adv = ADV(heading=adv_data['heading'],
                           description=adv_data['description'],
                           user_name=adv_data['user_name'],
                           )
